@@ -49,3 +49,13 @@ it('QuantileScale API', () => {
     expect(quantileScale.invertExtent("white")[0]).toBe(25);
     expect(quantileScale.invertExtent("white")[1]).toBe(50);
 });
+
+it('OrdinalScale API', () => {
+    let ordinalScale = d3.scaleOrdinal()
+        .domain(["lowest", "medium", "highest"])
+        .range(["black", "grey", "red"]);
+
+    expect(ordinalScale("lowest")).toBe("black");
+    expect(ordinalScale("medium")).toBe("grey");
+    expect(ordinalScale("highest")).toBe("red");
+});
