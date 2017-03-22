@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import "./App.css";
 import * as d3 from "d3";
+import d3Utils from './d3.utils.js';
 
 class App extends Component {
     constructor() {
@@ -36,21 +37,28 @@ class App extends Component {
             .attr('class', 'bar')
             // basic interactivity
             .on('mouseover', function (d, i, elements) {
-                d3.select(this).style('transform', 'scaleX(2)');
+                d3.select(this)
+                    .call(d3Utils.scaleX, 2)
+                    .call(d3Utils.fill, 'orange');
+
                 d3.selectAll(elements)
                     .filter(':not(:hover)')
-                    .style('fill-opacity', '0.5');
+                    .call(d3Utils.fade, 0.5);
             })
             .on('mouseout', function (d, i, elements) {
-                d3.select(this).style('transform', 'scaleX(1)');
+                d3.select(this)
+                    .call(d3Utils.scaleX, 1)
+                    .call(d3Utils.fill, 'lightGreen');
+
                 d3.selectAll(elements)
-                    .style('fill-opacity', '1');
+                    .call(d3Utils.fade, 1);
             });
 
         // add text
         barContainers.append('text')
             .attr('y', 20)
-            .text(d => d.name);
+            .text(d => d.name)
+            .call(d3Utils.removePointerEvents);
 
         update.exit().remove();
     }
