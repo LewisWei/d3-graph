@@ -34,8 +34,8 @@
 .chart {
     background-color: lightblue;
     border: 1px solid grey;
-    min-width: 210px;
-    min-height: 350px;
+    width: 425px;
+    height: 625px;
 }
 
 .bar {

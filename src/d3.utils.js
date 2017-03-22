@@ -6,7 +6,8 @@ let d3Utils = {
     scaleX: scaleX,
     fill, fill,
     fade: fade,
-    removePointerEvents: removePointerEvents
+    removePointerEvents: removePointerEvents,
+    borderColor: borderColor
 };
 
 function scaleX(selection, scale) {
@@ -22,7 +23,11 @@ function fade(selection, opacity) {
 }
 
 function removePointerEvents(selection) {
-    selection.style('pointer-events', 'none')
+    selection.style('pointer-events', 'none');
+}
+
+function borderColor(selection, color) {
+    selection.style('stroke', color);
 }
 
 export default d3Utils;

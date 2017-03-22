@@ -3,7 +3,45 @@ import "./App.css";
 import * as d3 from "d3";
 import d3Utils from './d3.utils.js';
 
+
 class App extends Component {
+
+    componentDidMount() {
+        // Margin Convention in d3
+        let margin = {top: 10, right: 20, bottom: 10, left: 20};
+        let width = 425 - margin.left - margin.right;
+        let height = 625 - margin.top - margin.bottom;
+
+        let container = d3.select('.chart')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        container.append('rect')
+            .attr('width', width / 2)
+            .attr('height', height)
+            .call(d3Utils.borderColor, 'black')
+            .call(d3Utils.fill, 'lightGreen');
+
+        container.append('rect')
+            .attr('x', width / 2)
+            .attr('width', width / 2)
+            .attr('height', height)
+            .call(d3Utils.borderColor, 'black')
+            .call(d3Utils.fill, 'lightGreen');
+
+    }
+
+    render() {
+        return <div className="chart">
+
+        </div>
+    }
+}
+
+class SimperBarChart extends Component {
     constructor() {
         super();
         this.state = {
