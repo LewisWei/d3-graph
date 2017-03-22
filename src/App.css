@@ -30,3 +30,10 @@
 .active {
     font-weight: bold;
 }
+
+.chart {
+    background-color: lightblue;
+    border: 1px solid grey;
+    min-width: 210px;
+    min-height: 350px;
+}
