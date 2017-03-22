@@ -37,3 +37,11 @@
     min-width: 210px;
     min-height: 350px;
 }
+
+.bar {
+    height: 30px;
+    fill: lightYellow;
+    color: darkgreen;
+    stroke: black;
+    stroke-width: 1;
+}

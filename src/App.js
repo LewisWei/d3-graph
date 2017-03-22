@@ -1,9 +1,57 @@
-import React, {Component} from 'react';
-import './App.css';
-import * as d3 from 'd3';
-
+import React, {Component} from "react";
+import "./App.css";
+import * as d3 from "d3";
 
 class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            scores: [
+                {name: 'Alice', score: 96},
+                {name: 'Billy', score: 83},
+                {name: 'Cindy', score: 92},
+                {name: 'David', score: 70},
+                {name: 'Emily', score: 96},
+            ]
+        }
+    }
+
+    componentDidMount() {
+        // initialize svg tag
+        let update = d3.select('.chart')
+            .append('svg')
+            .attr('width', 300)
+            .attr('height', 400)
+            .selectAll('g')
+            .data(this.state.scores);
+
+        // add bar containers
+        let barContainers = update.enter()
+            .append('g')
+            .attr('transform', (d, i) => 'translate(0,' + i * 35 + ')');
+
+        // add rect
+        barContainers.append('rect')
+            .attr('width', d => d.score)
+            .attr('class', 'bar');
+
+        // add text
+        barContainers.append('text')
+            .attr('y', 20)
+            .text(d => d.name);
+
+        update.exit().remove();
+    }
+
+    render() {
+        return (
+            <div className="chart">
+            </div>
+        )
+    }
+}
+
+class D3WithDOM extends Component {
     constructor() {
         super();
         this.state = {
