@@ -18,7 +18,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // bind data to dom
+        // modify the updating nodes
         let update = d3.select('.chart')
             .selectAll('div')
             .data(this.state.scores, function (d) {
@@ -26,7 +26,7 @@ class App extends Component {
             })
             .style('color', 'red');
 
-        // use data to create new dom
+        // add the entering nodes
         let enter = update.enter()
             .append('div')
             .text(function (d) {
@@ -34,10 +34,10 @@ class App extends Component {
             })
             .style('color', 'green');
 
-        // remove the unbind dom
+        // remove the exiting nodes
         update.exit().remove();
 
-        // merge and style
+        // merge the updating nodes and the entering nodes
         update.merge(enter)
             .style('width', d => d.score * 2 + "px")
             .style('font-size', '24px')
