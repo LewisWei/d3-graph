@@ -11,7 +11,7 @@ class App extends Component {
                 {name: 'Billy', score: 83},
                 {name: 'Cindy', score: 92},
                 {name: 'David', score: 70},
-                {name: 'Emily', score: 96},
+                {name: 'Emily', score: 96}
             ]
         }
     }
@@ -33,7 +33,19 @@ class App extends Component {
         // add rect
         barContainers.append('rect')
             .attr('width', d => d.score)
-            .attr('class', 'bar');
+            .attr('class', 'bar')
+            // basic interactivity
+            .on('mouseover', function (d, i, elements) {
+                d3.select(this).style('transform', 'scaleX(2)');
+                d3.selectAll(elements)
+                    .filter(':not(:hover)')
+                    .style('fill-opacity', '0.5');
+            })
+            .on('mouseout', function (d, i, elements) {
+                d3.select(this).style('transform', 'scaleX(1)');
+                d3.selectAll(elements)
+                    .style('fill-opacity', '1');
+            });
 
         // add text
         barContainers.append('text')
@@ -60,7 +72,7 @@ class D3WithDOM extends Component {
                 {name: 'Billy', score: 83},
                 {name: 'Cindy', score: 92},
                 {name: 'David', score: 70},
-                {name: 'Emily', score: 96},
+                {name: 'Emily', score: 96}
             ]
         }
     }
@@ -92,7 +104,6 @@ class D3WithDOM extends Component {
             .style('border', '1px solid black')
             .style('height', '50px')
             .style('background', 'lightYellow')
-
     }
 
     render() {
