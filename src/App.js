@@ -7,6 +7,58 @@ import d3Utils from './d3.utils.js';
 class App extends Component {
 
     componentDidMount() {
+        let margin = {left: 30, right: 20, top: 20, bottom: 40};
+        let width = 425 - margin.left - margin.right;
+        let height = 625 - margin.top - margin.bottom;
+
+        let container = d3.select('.chart')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        container.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .call(d3Utils.fill, 'lightGreen')
+            .call(d3Utils.borderColor, 'black');
+
+        let yScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height, 0]);
+
+        let yAxis = d3.axisLeft(yScale)
+            .ticks(5)
+            .tickSize(4);
+        container.call(yAxis);
+
+
+        let xScale = d3.scaleTime()
+            .domain([new Date(2017, 0, 1), new Date(2017, 0, 15)])
+            .range([0, width]);
+
+        let xAxis = d3.axisBottom(xScale)
+            .ticks(5)
+            .tickSize(10)
+            .tickPadding(5);
+
+        container.append('g')
+            .attr('transform', `translate(0,${height})`)
+            .call(xAxis);
+    }
+
+    render() {
+        return (
+            <div className="chart">
+            </div>
+        )
+    }
+}
+
+class MarginConvention extends Component {
+
+    componentDidMount() {
         // Margin Convention in d3
         let margin = {top: 10, right: 20, bottom: 10, left: 20};
         let width = 425 - margin.left - margin.right;
