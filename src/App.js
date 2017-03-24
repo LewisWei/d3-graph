@@ -1,10 +1,123 @@
 import React, {Component} from "react";
 import "./App.css";
 import * as d3 from "d3";
-import d3Utils from './d3.utils.js';
-
+import d3Utils from "./d3.utils.js";
 
 class App extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            scores: [
+                {score: 63, subject: 'Mathematics'},
+                {score: 82, subject: 'Geography'},
+                {score: 74, subject: 'Spelling'},
+                {score: 97, subject: 'Reading'},
+                {score: 52, subject: 'Science'},
+                {score: 74, subject: 'Chemistry'},
+                {score: 97, subject: 'Physics'},
+                {score: 52, subject: 'ASL'}
+            ]
+        }
+    }
+
+
+    componentDidMount() {
+        let margin = {left: 30, right: 20, top: 20, bottom: 60};
+        let width = 425 - margin.left - margin.right;
+        let height = 625 - margin.top - margin.bottom;
+
+        let container = d3.select('.responsive-chart')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .call(responsivefy)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        let yScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height, 0]);
+
+        let yAxis = d3.axisLeft(yScale)
+            .ticks(5)
+            .tickSize(4);
+        container.call(yAxis);
+
+        let xScale = d3.scaleBand()
+            .padding(0.2)
+            .domain(this.state.scores.map(d => d.subject))
+            .range([0, width]);
+
+        let xAxis = d3.axisBottom(xScale)
+            .ticks(5)
+            .tickSize(10)
+            .tickPadding(5);
+
+        container.append('g')
+            .attr('transform', `translate(0,${height})`)
+            .call(xAxis)
+            .selectAll('text')
+            .call(d3Utils.textAnchor, 'end')
+            .attr('transform', 'rotate(-45)');
+
+        container.selectAll('rect')
+            .data(this.state.scores)
+            .enter()
+            .append('rect')
+            .call(d3Utils.fill, 'lightGreen')
+            .call(d3Utils.borderColor, 'black')
+            .attr('x', d => xScale(d.subject))
+            .attr('y', d => yScale(d.score))
+            .attr('width', d => xScale.bandwidth())
+            .attr('height', d => height - yScale(d.score))
+            .on('mouseover', function (d, i, elements) {
+                d3.select(this)
+                    .call(d3Utils.fill, 'orange');
+            })
+            .on('mouseout', function (d, i, elements) {
+                d3.select(this)
+                    .call(d3Utils.fill, 'lightGreen');
+            });
+
+
+        function responsivefy(svg) {
+            // get container + svg aspect ratio
+            let container = d3.select(svg.node().parentNode),
+                width = parseInt(svg.style("width")),
+                height = parseInt(svg.style("height")),
+                aspect = width / height;
+
+            // add viewBox and preserveAspectRatio properties,
+            // and call resize so that svg resizes on inital page load
+            svg.attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMinYMid")
+                .call(resize);
+
+            // to register multiple listeners for same event type,
+            // you need to add namespace, i.e., 'click.foo'
+            // necessary if you call invoke this function for multiple svgs
+            // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+            d3.select(window).on(`resize.${container.attr("id")}`, resize);
+
+            // get width of container and resize svg to fit it
+            function resize() {
+                let targetWidth = parseInt(container.style("width"));
+                svg.attr("width", targetWidth);
+                svg.attr("height", Math.round(targetWidth / aspect));
+            }
+        }
+    }
+
+    render() {
+        return (
+            <div className="responsive-chart">
+            </div>
+        )
+    }
+}
+
+class ResponsiveChart extends Component {
 
     componentDidMount() {
         let margin = {left: 30, right: 20, top: 20, bottom: 40};

@@ -7,7 +7,8 @@ let d3Utils = {
     fill, fill,
     fade: fade,
     removePointerEvents: removePointerEvents,
-    borderColor: borderColor
+    borderColor: borderColor,
+    textAnchor: textAnchor
 };
 
 function scaleX(selection, scale) {
@@ -28,6 +29,10 @@ function removePointerEvents(selection) {
 
 function borderColor(selection, color) {
     selection.style('stroke', color);
+}
+
+function textAnchor(selection, anchor) {
+    selection.style('text-anchor', anchor);
 }
 
 export default d3Utils;
