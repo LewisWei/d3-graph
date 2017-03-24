@@ -38,6 +38,11 @@
     height: 625px;
 }
 
+.responsive-chart {
+    background-color: lightblue;
+    border: 1px solid grey;
+}
+
 .bar {
     height: 30px;
     fill: lightGreen;

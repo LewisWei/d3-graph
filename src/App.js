@@ -11,6 +11,86 @@ class App extends Component {
         let width = 425 - margin.left - margin.right;
         let height = 625 - margin.top - margin.bottom;
 
+        let container = d3.select('.responsive-chart')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .call(responsivefy)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        container.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .call(d3Utils.fill, 'lightGreen')
+            .call(d3Utils.borderColor, 'black');
+
+        let yScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height, 0]);
+
+        let yAxis = d3.axisLeft(yScale)
+            .ticks(5)
+            .tickSize(4);
+        container.call(yAxis);
+
+
+        let xScale = d3.scaleTime()
+            .domain([new Date(2017, 0, 1), new Date(2017, 0, 15)])
+            .range([0, width]);
+
+        let xAxis = d3.axisBottom(xScale)
+            .ticks(5)
+            .tickSize(10)
+            .tickPadding(5);
+
+        container.append('g')
+            .attr('transform', `translate(0,${height})`)
+            .call(xAxis);
+
+        function responsivefy(svg) {
+            // get container + svg aspect ratio
+            let container = d3.select(svg.node().parentNode),
+                width = parseInt(svg.style("width")),
+                height = parseInt(svg.style("height")),
+                aspect = width / height;
+
+            // add viewBox and preserveAspectRatio properties,
+            // and call resize so that svg resizes on inital page load
+            svg.attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMinYMid")
+                .call(resize);
+
+            // to register multiple listeners for same event type,
+            // you need to add namespace, i.e., 'click.foo'
+            // necessary if you call invoke this function for multiple svgs
+            // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+            d3.select(window).on(`resize.${container.attr("id")}`, resize);
+
+            // get width of container and resize svg to fit it
+            function resize() {
+                let targetWidth = parseInt(container.style("width"));
+                svg.attr("width", targetWidth);
+                svg.attr("height", Math.round(targetWidth / aspect));
+            }
+        }
+    }
+
+    render() {
+        return (
+            <div className="responsive-chart">
+            </div>
+        )
+    }
+}
+
+class Axis extends Component {
+
+    componentDidMount() {
+        let margin = {left: 30, right: 20, top: 20, bottom: 40};
+        let width = 425 - margin.left - margin.right;
+        let height = 625 - margin.top - margin.bottom;
+
         let container = d3.select('.chart')
             .append('svg')
             .attr('width', width + margin.left + margin.right)
