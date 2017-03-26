@@ -5,7 +5,7 @@
 let d3Utils = {
     scaleX: scaleX,
     fill, fill,
-    fade: fade,
+    opacity: opacity,
     removePointerEvents: removePointerEvents,
     borderColor: borderColor,
     textAnchor: textAnchor
@@ -19,7 +19,7 @@ function fill(selection, color) {
     selection.style('fill', color);
 }
 
-function fade(selection, opacity) {
+function opacity(selection, opacity) {
     selection.style('fill-opacity', opacity);
 }
 

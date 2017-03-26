@@ -4,6 +4,79 @@ import * as d3 from "d3";
 import d3Utils from "./d3.utils.js";
 
 class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            data: require("./json/ScatterPlot.data.json")
+        }
+    }
+
+    componentDidMount() {
+        let margin = {top: 20, bottom: 20, left: 40, right: 20};
+        let width = 425 - margin.left - margin.right;
+        let height = 625 - margin.top - margin.bottom;
+
+        let container = d3.select('.chart')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        let yScale = d3.scaleLinear()
+            .domain(d3.extent(this.state.data, d => d.expectancy))
+            .range([height, 0])
+            .nice();
+
+        let yAxis = d3.axisLeft(yScale);
+        container.call(yAxis);
+
+        let xScale = d3.scaleLinear()
+            .domain(d3.extent(this.state.data, d => d.cost))
+            .range([0, width])
+            .nice();
+
+        let xAxis = d3.axisBottom(xScale);
+
+        container.append('g')
+            .attr('transform', `translate(0,${height})`)
+            .call(xAxis);
+
+        let circleContainers = container
+            .selectAll('.ball')
+            .data(this.state.data)
+            .enter()
+            .append('g')
+            .attr('class', 'ball')
+            .attr('transform', d => `translate(${xScale(d.cost)},${yScale(d.expectancy)})`);
+
+
+        let rScale = d3.scaleSqrt()
+            .domain([0, d3.max(this.state.data, d => d.population)])
+            .range([0, 40]);
+
+        circleContainers.append('circle')
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', d => rScale(d.population))
+            .call(d3Utils.fill, 'green')
+            .call(d3Utils.opacity, 0.5);
+
+        circleContainers.append('text')
+            .attr('y', 4)
+            .call(d3Utils.textAnchor, 'middle')
+            .call(d3Utils.fill, 'black')
+            .text(d => d.code);
+    }
+
+    render() {
+        return <div className="chart">
+
+        </div>
+    }
+}
+
+class BarChart extends Component {
 
     constructor() {
         super();
@@ -326,7 +399,7 @@ class SimperBarChart extends Component {
 
                 d3.selectAll(elements)
                     .filter(':not(:hover)')
-                    .call(d3Utils.fade, 0.5);
+                    .call(d3Utils.opacity, 0.5);
             })
             .on('mouseout', function (d, i, elements) {
                 d3.select(this)
@@ -334,7 +407,7 @@ class SimperBarChart extends Component {
                     .call(d3Utils.fill, 'lightGreen');
 
                 d3.selectAll(elements)
-                    .call(d3Utils.fade, 1);
+                    .call(d3Utils.opacity, 1);
             });
 
         // add text
